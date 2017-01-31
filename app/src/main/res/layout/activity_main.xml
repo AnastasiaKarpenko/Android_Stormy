@@ -6,12 +6,11 @@
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="ws.tilda.anastasia.stormy.ui.MainActivity"
-    android:background="#FFFC970B">
+    android:background="@drawable/bg_gradient">
 
     <TextView
         android:text="--"
@@ -150,6 +149,34 @@
         android:id="@+id/progressBar"
         android:layout_alignLeft="@+id/refreshImageView"
         android:layout_alignStart="@+id/refreshImageView"/>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/hourlyButton"
+            android:layout_weight="1"
+            android:background="#40ffffff"
+            android:text="HOURLY"
+            android:textColor="@android:color/white"/>
+
+        <Button
+            android:text="7 DAY"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/dailyButton"
+            android:layout_weight="1"
+            android:textColor="@android:color/white"
+            android:background="#40ffffff"
+            android:layout_marginLeft="2dp"/>
+    </LinearLayout>
 
 
 </RelativeLayout>
