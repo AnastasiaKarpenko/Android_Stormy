@@ -1,13 +1,15 @@
-package ws.tilda.anastasia.stormy;
+package ws.tilda.anastasia.stormy.weather;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import ws.tilda.anastasia.stormy.R;
+
 import static android.graphics.PorterDuff.Mode.MULTIPLY;
 
-public class CurrentWeather {
+public class Current {
     private static final int MULTIPLYER = 1000;
     private String mIcon;
     private long mTime;
