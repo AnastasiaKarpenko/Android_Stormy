@@ -15,10 +15,16 @@
     <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
+        android:id="@android:id/list"
+        android:layout_alignParentTop="false"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:id="@android:id/list"/>
+        android:layout_alignParentStart="false"
+        android:layout_above="@+id/locationLabel"
+        android:layout_below="@+id/thisWeekLabel"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:divider="@null"
+        android:dividerHeight="0dp"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -28,4 +34,27 @@
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
         android:textColor="@android:color/white"/>
+
+    <TextView
+        android:text="This week weather"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/thisWeekLabel"
+        android:textColor="#ffffffff"
+        android:layout_marginTop="16dp"
+        android:textSize="30sp"/>
+
+    <TextView
+        android:text="Alcatraz Island, CA"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/locationLabel"
+        android:textSize="18sp"
+        android:layout_marginBottom="10dp"
+        android:textColor="#ffffffff"/>
+
 </RelativeLayout>

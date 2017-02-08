@@ -13,6 +13,8 @@ import java.util.zip.Inflater;
 import ws.tilda.anastasia.stormy.R;
 import ws.tilda.anastasia.stormy.weather.Day;
 
+import static ws.tilda.anastasia.stormy.weather.Forecast.getIconId;
+
 public class DayAdapter extends BaseAdapter{
     private Context mContext;
     private Day[] mDays;
@@ -50,19 +52,34 @@ public class DayAdapter extends BaseAdapter{
             holder.iconImageView = (ImageView) convertView.findViewById(R.id.iconImageView);
             holder.dayLabel = (TextView) convertView.findViewById(R.id.dayNameLabel);
             holder.temperatureLabel = (TextView) convertView.findViewById(R.id.temperatureLabel);
+            holder.circleImageView = (ImageView) convertView.findViewById(R.id.circleImageView);
+
 
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        return null;
+        Day day = mDays[position];
+        holder.iconImageView.setImageResource(day.getIconId());
+        holder.temperatureLabel.setText(day.getTemperatureMax() + "");
+        holder.circleImageView.setImageResource(R.drawable.bg_temperature);
+
+        if(position == 0) {
+            holder.dayLabel.setText("Today");
+        } else {
+            holder.dayLabel.setText(day.getDayOfTheWeek());
+
+        }
+
+        return convertView;
     }
 
     private static class ViewHolder {
         ImageView iconImageView; //public by default
         TextView temperatureLabel;
         TextView dayLabel;
+        ImageView circleImageView;
 
     }
 }
