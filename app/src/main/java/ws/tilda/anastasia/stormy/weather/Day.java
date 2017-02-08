@@ -5,6 +5,7 @@ import android.os.Parcelable;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.TimeZone;
 
 public class Day implements Parcelable{
@@ -63,7 +64,7 @@ public class Day implements Parcelable{
     }
 
     public String getDayOfTheWeek() {
-        SimpleDateFormat formatter = new SimpleDateFormat("EEEE");
+        SimpleDateFormat formatter = new SimpleDateFormat("EEEE", Locale.US);
         formatter.setTimeZone(TimeZone.getTimeZone(mTimezone));
         Date dateTime = new Date(mTime * 1000);
 

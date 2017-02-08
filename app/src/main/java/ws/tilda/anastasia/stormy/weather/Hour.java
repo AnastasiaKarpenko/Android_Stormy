@@ -5,6 +5,7 @@ import android.os.Parcelable;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 public class Hour implements Parcelable{
     private long mTime;
@@ -60,7 +61,7 @@ public class Hour implements Parcelable{
     }
 
     public String getHour() {
-        SimpleDateFormat formatter = new SimpleDateFormat("h a");
+        SimpleDateFormat formatter = new SimpleDateFormat("h a", Locale.US);
         Date date = new Date (mTime * 1000);
         return formatter.format(date);
     }
