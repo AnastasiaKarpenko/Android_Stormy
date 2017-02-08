@@ -3,6 +3,9 @@ package ws.tilda.anastasia.stormy.weather;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class Hour implements Parcelable{
     private long mTime;
     private String mSummary;
@@ -32,12 +35,16 @@ public class Hour implements Parcelable{
         return mIcon;
     }
 
+    public int getIconId() {
+        return Forecast.getIconId(mIcon);
+    }
+
     public void setIcon(String icon) {
         mIcon = icon;
     }
 
-    public double getTemperature() {
-        return mTemperature;
+    public int getTemperature() {
+        return (int) Math.round(mTemperature);
     }
 
     public void setTemperature(double temperature) {
@@ -50,6 +57,12 @@ public class Hour implements Parcelable{
 
     public void setTimezone(String timezone) {
         mTimezone = timezone;
+    }
+
+    public String getHour() {
+        SimpleDateFormat formatter = new SimpleDateFormat("h a");
+        Date date = new Date (mTime * 1000);
+        return formatter.format(date);
     }
 
     @Override
