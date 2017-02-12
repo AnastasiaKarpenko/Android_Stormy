@@ -1,14 +1,11 @@
 package ws.tilda.anastasia.stormy.ui;
 
 import android.app.Activity;
-import android.app.ListActivity;
 import android.content.Intent;
-import android.os.Parcelable;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,9 +17,6 @@ import butterknife.ButterKnife;
 import ws.tilda.anastasia.stormy.R;
 import ws.tilda.anastasia.stormy.adapters.DayAdapter;
 import ws.tilda.anastasia.stormy.weather.Day;
-
-import static android.R.id.message;
-import static android.icu.lang.UCharacter.GraphemeClusterBreak.T;
 
 public class DailyForecastActivity extends Activity {
 

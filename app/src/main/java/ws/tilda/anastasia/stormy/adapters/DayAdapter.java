@@ -8,12 +8,8 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.zip.Inflater;
-
 import ws.tilda.anastasia.stormy.R;
 import ws.tilda.anastasia.stormy.weather.Day;
-
-import static ws.tilda.anastasia.stormy.weather.Forecast.getIconId;
 
 public class DayAdapter extends BaseAdapter{
     private Context mContext;
