@@ -45,7 +45,9 @@ public class Hour implements Parcelable{
     }
 
     public int getTemperature() {
-        return (int) Math.round(mTemperature);
+        int farenheitTemp = (int) Math.round(mTemperature);
+        int celciusTemp = (farenheitTemp- 32) * 5 / 9;
+        return celciusTemp;
     }
 
     public void setTemperature(double temperature) {

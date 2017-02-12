@@ -1,10 +1,15 @@
 package ws.tilda.anastasia.stormy.ui;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentSender;
+import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
+import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -36,21 +41,47 @@ import ws.tilda.anastasia.stormy.weather.Day;
 import ws.tilda.anastasia.stormy.weather.Forecast;
 import ws.tilda.anastasia.stormy.weather.Hour;
 
-public class MainActivity extends AppCompatActivity {
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
+import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.GoogleMap;
+
+public class MainActivity extends AppCompatActivity implements
+        ConnectionCallbacks,
+        OnConnectionFailedListener,
+        LocationListener {
     public static final String TAG = MainActivity.class.getSimpleName();
     public static final String DAILY_FORECAST = "daily_forecast";
     public static final String HOURLY_FORECAST = "hourly_forecast";
     private Forecast mForecast;
 
-    @BindView(R.id.timeLabel) TextView mTimeLabel;
-    @BindView(R.id.temperatureLabel) TextView mTemperatureLabel;
-    @BindView(R.id.humidityValue) TextView mHumidityValue;
-    @BindView(R.id.precipValue) TextView mPrecipValue;
-    @BindView(R.id.summaryLabel) TextView mSummaryLabel;
-    @BindView(R.id.iconImageView) ImageView mIconImageView;
-    @BindView(R.id.refreshImageView) ImageView mRefreshImageView;
-    @BindView(R.id.progressBar) ProgressBar mProgressBar;
+    //Define a request code to send to Google Play services
+    private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
+    private GoogleApiClient mGoogleApiClient;
+    private LocationRequest mLocationRequest;
+    private double currentLatitude;
+    private double currentLongitude;
 
+    @BindView(R.id.timeLabel)
+    TextView mTimeLabel;
+    @BindView(R.id.temperatureLabel)
+    TextView mTemperatureLabel;
+    @BindView(R.id.humidityValue)
+    TextView mHumidityValue;
+    @BindView(R.id.precipValue)
+    TextView mPrecipValue;
+    @BindView(R.id.summaryLabel)
+    TextView mSummaryLabel;
+    @BindView(R.id.iconImageView)
+    ImageView mIconImageView;
+    @BindView(R.id.refreshImageView)
+    ImageView mRefreshImageView;
+    @BindView(R.id.progressBar)
+    ProgressBar mProgressBar;
 
 
     @Override
@@ -59,8 +90,19 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        final double latitude = 37.8267;
-        final double longitude = -122.4233;
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                // The next two lines tell the new client that “this” current class will handle connection stuff
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                //fourth line adds the LocationServices API endpoint from GooglePlayServices
+                .addApi(LocationServices.API)
+                .build();
+
+        // Create the LocationRequest object
+        mLocationRequest = LocationRequest.create()
+                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+                .setInterval(10 * 1000)        // 10 seconds, in milliseconds
+                .setFastestInterval(1 * 1000); // 1 second, in milliseconds
 
         mProgressBar.setVisibility(View.INVISIBLE);
 
@@ -68,20 +110,20 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View view) {
-                getForecast(latitude, longitude);
+                getForecast(currentLatitude, currentLongitude);
             }
         });
 
-        getForecast(latitude, longitude);
-
         Log.d(TAG, "Main UI code is running!");
+
+
     }
 
-    private void getForecast(double latitude, double longitude) {
+    private void getForecast(double currentLatitude, double currentLongitude) {
         String apiKey = "c9dbea68ce733caa0c9755fa3fd43873";
         String forcastURL = "https://api.darksky.net/forecast/" + apiKey +
-                "/" + latitude + "," + longitude;
-        if(isNetworkAvailable()) {
+                "/" + currentLatitude + "," + currentLongitude;
+        if (isNetworkAvailable()) {
 
             toggleRefresh();
 
@@ -141,7 +183,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void toggleRefresh() {
-        if(mProgressBar.getVisibility() == View.INVISIBLE) {
+        if (mProgressBar.getVisibility() == View.INVISIBLE) {
             mProgressBar.setVisibility(View.VISIBLE);
             mRefreshImageView.setVisibility(View.INVISIBLE);
         } else {
@@ -198,34 +240,34 @@ public class MainActivity extends AppCompatActivity {
         return days;
     }
 
-        private Hour[] getHourlyForecast (String jsonData)throws JSONException {
-            JSONObject forecast = new JSONObject(jsonData);
-            String timezone = forecast.getString("timezone");
-            JSONObject hourly = forecast.getJSONObject("hourly");
-            JSONArray data = hourly.getJSONArray("data");
+    private Hour[] getHourlyForecast(String jsonData) throws JSONException {
+        JSONObject forecast = new JSONObject(jsonData);
+        String timezone = forecast.getString("timezone");
+        JSONObject hourly = forecast.getJSONObject("hourly");
+        JSONArray data = hourly.getJSONArray("data");
 
-            Hour[] hours = new Hour[data.length()];
+        Hour[] hours = new Hour[data.length()];
 
-            for (int i = 0; i < data.length(); i++) {
-                JSONObject jsonHour = data.getJSONObject(i);
-                Hour hour = new Hour();
+        for (int i = 0; i < data.length(); i++) {
+            JSONObject jsonHour = data.getJSONObject(i);
+            Hour hour = new Hour();
 
-                hour.setSummary(jsonHour.getString("summary"));
-                hour.setIcon(jsonHour.getString("icon"));
-                hour.setTemperature(jsonHour.getDouble("temperature"));
-                hour.setTime(jsonHour.getLong("time"));
-                hour.setTimezone(timezone);
+            hour.setSummary(jsonHour.getString("summary"));
+            hour.setIcon(jsonHour.getString("icon"));
+            hour.setTemperature(jsonHour.getDouble("temperature"));
+            hour.setTime(jsonHour.getLong("time"));
+            hour.setTimezone(timezone);
 
-                hours[i] = hour;
-            }
-
-            return hours;
-
-
+            hours[i] = hour;
         }
 
+        return hours;
 
-    private Current getCurrentDetails(String jsonData) throws JSONException{
+
+    }
+
+
+    private Current getCurrentDetails(String jsonData) throws JSONException {
         JSONObject forecast = new JSONObject(jsonData);
         String timezone = forecast.getString("timezone");
         Log.i(TAG, "From JSON: " + timezone);
@@ -253,7 +295,7 @@ public class MainActivity extends AppCompatActivity {
                 getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = manager.getActiveNetworkInfo();
         boolean isAvailable = false;
-        if(networkInfo != null && networkInfo.isConnected()) {
+        if (networkInfo != null && networkInfo.isConnected()) {
             isAvailable = true;
         }
 
@@ -279,5 +321,108 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //Now lets connect to the API
+        mGoogleApiClient.connect();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.v(this.getClass().getSimpleName(), "onPause()");
+
+        //Disconnect from API onPause()
+        if (mGoogleApiClient.isConnected()) {
+            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+            mGoogleApiClient.disconnect();
+        }
+    }
+
+    /**
+     * If connected get lat and long
+     *
+     */
+    @Override
+    public void onConnected(Bundle bundle) {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+
+        if (location == null) {
+            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+
+
+        } else {
+            //If everything went fine lets get latitude and longitude
+            currentLatitude = location.getLatitude();
+            currentLongitude = location.getLongitude();
+
+            //Toast.makeText(this, currentLatitude + " WORKS " + currentLongitude + "", Toast.LENGTH_LONG).show();
+        }
+        getForecast(currentLatitude, currentLongitude);
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {}
+
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+            /*
+             * Google Play services can resolve some errors it detects.
+             * If the error has a resolution, try sending an Intent to
+             * start a Google Play services activity that can resolve
+             * error.
+             */
+        if (connectionResult.hasResolution()) {
+            try {
+                // Start an Activity that tries to resolve the error
+                connectionResult.startResolutionForResult(this, CONNECTION_FAILURE_RESOLUTION_REQUEST);
+                    /*
+                     * Thrown if Google Play services canceled the original
+                     * PendingIntent
+                     */
+            } catch (IntentSender.SendIntentException e) {
+                // Log the error
+                e.printStackTrace();
+            }
+        } else {
+                /*
+                 * If no resolution is available, display a dialog to the
+                 * user with the error.
+                 */
+            Log.e("Error", "Location services connection failed with code " + connectionResult.getErrorCode());
+        }
+    }
+
+    /**
+     * If locationChanges change lat and long
+     *
+     *
+     * @param location
+     */
+    @Override
+    public void onLocationChanged(Location location) {
+        currentLatitude = location.getLatitude();
+        currentLongitude = location.getLongitude();
+
+        //Toast.makeText(this, currentLatitude + " WORKS " + currentLongitude + "", Toast.LENGTH_LONG).show();
+    }
 
 }
+
+
+
+
+

@@ -5,10 +5,6 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
-import ws.tilda.anastasia.stormy.R;
-
-import static android.graphics.PorterDuff.Mode.MULTIPLY;
-
 public class Current {
     private static final int MULTIPLYER = 1000;
     private String mIcon;
@@ -44,7 +40,7 @@ public class Current {
     }
 
     public String getFormattedTime() {
-        SimpleDateFormat formatter = new SimpleDateFormat("h:mm a", Locale.US);
+        SimpleDateFormat formatter = new SimpleDateFormat("h:mm a",Locale.UK);
         formatter.setTimeZone(TimeZone.getTimeZone(getTimeZone()));
         Date dateTime = new Date(getTime() * MULTIPLYER);
         String timeString = formatter.format(dateTime);
@@ -57,7 +53,9 @@ public class Current {
     }
 
     public int getTemperature() {
-        return (int) Math.round(mTemperature);
+        int farenheitTemp = (int) Math.round(mTemperature);
+        int celciusTemp = (farenheitTemp - 32) * 5 / 9;
+        return celciusTemp;
     }
 
     public void setTemperature(double temperature) {

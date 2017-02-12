@@ -36,7 +36,9 @@ public class Day implements Parcelable{
     }
 
     public int getTemperatureMax() {
-        return (int) Math.round(mTemperatureMax);
+        int farenheitTemp = (int) Math.round(mTemperatureMax);
+        int celciusTemp = (farenheitTemp- 32) * 5 / 9;
+        return celciusTemp;
     }
 
     public void setTemperatureMax(double temperatureMax) {
