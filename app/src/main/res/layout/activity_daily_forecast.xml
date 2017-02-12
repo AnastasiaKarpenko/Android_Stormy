@@ -46,15 +46,4 @@
         android:layout_marginTop="16dp"
         android:textSize="30sp"/>
 
-    <TextView
-        android:text="Alcatraz Island, CA"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/locationLabel"
-        android:textSize="18sp"
-        android:layout_marginBottom="10dp"
-        android:textColor="#ffffffff"/>
-
 </RelativeLayout>

@@ -158,20 +158,6 @@
             android:layout_marginLeft="2dp"/>
     </LinearLayout>
 
-    <TextView
-        android:text="Alcatraz Island, CA"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/locationLabel"
-        android:textColor="@android:color/white"
-        android:textSize="24sp"
-        android:layout_below="@+id/refreshImageView"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginRight="37dp"
-        android:layout_marginEnd="37dp"
-        android:layout_marginTop="33dp"/>
-
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -181,7 +167,20 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_marginLeft="13dp"
+        android:layout_marginRight="13dp"
         android:layout_marginStart="13dp"/>
+
+    <TextView
+        android:text="Loading..."
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/locationLabel"
+        android:textColor="@android:color/white"
+        android:textSize="24sp"
+        android:layout_marginTop="32dp"
+        android:layout_below="@id/refreshImageView"
+        android:layout_alignLeft="@+id/temperatureLabel"
+        android:layout_alignStart="@+id/temperatureLabel"/>
 
 
 </RelativeLayout>

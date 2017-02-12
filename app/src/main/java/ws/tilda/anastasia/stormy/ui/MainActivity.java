@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -33,6 +35,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -64,6 +68,12 @@ public class MainActivity extends AppCompatActivity implements
     private double currentLatitude;
     private double currentLongitude;
 
+    public String getCurrentLocationName() {
+        return currentLocationName;
+    }
+
+    private String currentLocationName;
+
     @BindView(R.id.timeLabel)
     TextView mTimeLabel;
     @BindView(R.id.temperatureLabel)
@@ -80,6 +90,8 @@ public class MainActivity extends AppCompatActivity implements
     ImageView mRefreshImageView;
     @BindView(R.id.progressBar)
     ProgressBar mProgressBar;
+    @BindView(R.id.locationLabel)
+    TextView mLocationName;
 
 
     @Override
@@ -113,13 +125,11 @@ public class MainActivity extends AppCompatActivity implements
         });
 
         Log.d(TAG, "Main UI code is running!");
-
-
     }
 
     private void getForecast(double currentLatitude, double currentLongitude) {
         String apiKey = "c9dbea68ce733caa0c9755fa3fd43873";
-        String forcastURL = "https://api.darksky.net/forecast/" + apiKey +
+        String forecastURL = "https://api.darksky.net/forecast/" + apiKey +
                 "/" + currentLatitude + "," + currentLongitude;
         if (isNetworkAvailable()) {
 
@@ -128,7 +138,7 @@ public class MainActivity extends AppCompatActivity implements
 
             OkHttpClient client = new OkHttpClient();
             Request request = new Request.Builder()
-                    .url(forcastURL)
+                    .url(forecastURL)
                     .build();
 
             Call call = client.newCall(request);
@@ -188,7 +198,6 @@ public class MainActivity extends AppCompatActivity implements
             mProgressBar.setVisibility(View.INVISIBLE);
             mRefreshImageView.setVisibility(View.VISIBLE);
         }
-
     }
 
     private void updateDisplay() {
@@ -201,9 +210,11 @@ public class MainActivity extends AppCompatActivity implements
 
         Drawable drawable = ContextCompat.getDrawable(this, mForecast.getCurrent().getIconId());
         mIconImageView.setImageDrawable(drawable);
+        mLocationName.setText(currentLocationName);
 
     }
 
+//
     private Forecast parseForecastdetails(String jsonData) throws JSONException {
         Forecast forecast = new Forecast();
 
@@ -368,6 +379,9 @@ public class MainActivity extends AppCompatActivity implements
             //Toast.makeText(this, currentLatitude + " WORKS " + currentLongitude + "", Toast.LENGTH_LONG).show();
         }
         getForecast(currentLatitude, currentLongitude);
+        currentLocationName = getAddress(currentLatitude, currentLongitude);
+
+        //Toast.makeText(this, currentLatitude + " WORKS " + currentLongitude + "" +  currentLocationName , Toast.LENGTH_LONG).show();
 
     }
 
@@ -415,12 +429,29 @@ public class MainActivity extends AppCompatActivity implements
         currentLatitude = location.getLatitude();
         currentLongitude = location.getLongitude();
 
-        //Toast.makeText(this, currentLatitude + " WORKS " + currentLongitude + "", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, currentLatitude + " WORKS " + currentLongitude + "", Toast.LENGTH_LONG).show();
     }
 
+    private String getAddress(double latitude, double longitude) {
+        StringBuilder result = new StringBuilder();
+        try {
+            Geocoder geocoder = new Geocoder(this, Locale.US);
+            List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 10);
+            if (addresses != null && addresses.size() > 0) {
+                for (Address adr : addresses) {
+                    if (adr.getLocality() != null && adr.getLocality().length() > 0) {
+                        return adr.getLocality();
+                    }
+                }
+            }
+        } catch (IOException e) {
+            Log.e("tag", e.getMessage());
+        }
+
+        return null;
+    }
+
+
 }
-
-
-
 
 
