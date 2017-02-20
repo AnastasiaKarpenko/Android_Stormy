@@ -20,4 +20,4 @@ Topics covered in this project:
 
 Screenshots of the app:
 
-![alt tag](https://github.com/AnastasiaKarpenko/Android_Stormy/blob/master/Stormy_screenshots.png)
+![alt tag](https://github.com/AnastasiaKarpenko/Android_Stormy/blob/master/Stormy_screenshots.jpg)
