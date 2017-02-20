@@ -1,5 +1,5 @@
 # Android_Stormy
-A weather app that shows weather forecast of the current location of the user: 
+A weather app that shows weather forecast of the user's current location: 
 current forecast, 7 days forecast, hourly forecast
 
 Topics covered in this project:
@@ -16,3 +16,8 @@ Topics covered in this project:
 - RecyclerView
 - ViewHolder
 - Getting current location 
+
+
+Screenshots of the app:
+
+![alt tag](https://github.com/AnastasiaKarpenko/Android_Stormy/blob/master/Stormy_screenshots.png)
