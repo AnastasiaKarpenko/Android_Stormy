@@ -4,7 +4,7 @@
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingLeft="64dp"
+                android:paddingLeft="54dp"
                 android:paddingRight="32dp"
                 android:paddingTop="4dp"
                 android:paddingBottom="4dp"
@@ -48,6 +48,7 @@
         android:layout_alignBottom="@+id/circleImageView"
         android:layout_alignLeft="@+id/circleImageView"
         android:layout_alignRight="@+id/circleImageView"
+        android:layout_centerInParent="true"
         android:gravity="center"
         android:textColor="#f25019"
         tools:text="100"/>
