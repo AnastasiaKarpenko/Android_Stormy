@@ -1,4 +1,4 @@
-# Android_Stormy
+# Android_Stormy ![alt tag](https://github.com/AnastasiaKarpenko/Android_Stormy/blob/master/ic_launcher.png)
 A weather app that shows weather forecast of the user's current location: 
 current forecast, 7 days forecast, hourly forecast
 
