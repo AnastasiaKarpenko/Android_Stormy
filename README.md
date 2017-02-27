@@ -2,7 +2,7 @@
 A weather app that shows weather forecast of the user's current location: 
 current forecast, 7 days forecast, hourly forecast
 
-Topics covered in this project:
+Topics learnt in this project:
 
 - Networking
 - OkHttp library
